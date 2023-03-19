@@ -1,0 +1,36 @@
+version: "3.3"
+
+name: moviedb-mysql
+services:
+  # DB service
+  mysql:
+    container_name: mysql_database
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: MovieDB
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      # <Port exposed> : < Port running inside container>
+      - 9002:3306
+    expose:
+      - 9002
+
+  # DB dashboard service
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: mysql_dashboard
+    links:
+      - mysql
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    ports:
+      # <Port exposed> : < Port running inside container>
+      - 8002:80
